@@ -83,13 +83,19 @@ const audio=document.getElementById("audio");
 const btn=document.getElementById("playBtn");
 const prog=document.getElementById("progress");
 
-btn.onclick=()=>{
+btn.onclick=function(){
   player=true;
   fbq('trackCustom','PlayerClick');
-  audio.paused?(audio.play(),btn.innerText="❚❚"):(audio.pause(),btn.innerText="▶");
+  if(audio.paused){
+    audio.play();
+    btn.innerText="❚❚";
+  }else{
+    audio.pause();
+    btn.innerText="▶";
+  }
 };
 
-audio.ontimeupdate=()=>{
+audio.ontimeupdate=function(){
   if(!audio.duration)return;
   let p=audio.currentTime/audio.duration;
   prog.style.width=(p*100)+"%";
@@ -169,6 +175,7 @@ function go(e,el,tipo){
     id+="CupomClick"+pos;
     fbq('track',"InitiateCheckout");
     navigator.clipboard.writeText(CUPOM);
+    el.innerText="Copiado!";
   }else{
     id+="ClickShopee"+pos;
     fbq('track',"ViewContent");
@@ -177,6 +184,8 @@ function go(e,el,tipo){
       clickRight=true;
       checkEventos();
     }
+
+    el.innerText="Redirecionando...";
   }
 
   id+=extra();
@@ -184,11 +193,19 @@ function go(e,el,tipo){
 
   const url=API+"?link="+encodeURIComponent(LINK)+"&uc="+id;
 
-  setTimeout(()=>{window.location.href=url},120);
+  setTimeout(function(){
+    window.location.href=url;
+  },120);
 }
 
-document.getElementById("btnCupom").onclick=e=>go(e,this,"cupom");
-document.getElementById("btnShopee").onclick=e=>go(e,this,"normal");
+/* BOTÕES (CORRIGIDO) */
+document.getElementById("btnCupom").onclick = function(e){
+  go(e, this, "cupom");
+};
+
+document.getElementById("btnShopee").onclick = function(e){
+  go(e, this, "normal");
+};
 
 })();
 </script>
