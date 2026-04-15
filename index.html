@@ -158,7 +158,7 @@ let player = false;
 
 /* EVENTO COMBINADO */
 let clickRight = false;
-let tempoS0a2 = false;
+let tempoS0a1 = false;
 let eventoDisparado = false;
 
 /* PLAYER */
@@ -208,32 +208,37 @@ audio.ontimeupdate = ()=>{
   }
 };
 
-/* TEMPO */
-setInterval(()=>{
-  tempo+=2;
+/* TEMPO IMEDIATO */
+function dispararTempo(){
 
-  if(tempo<=30){
-    tempoLabel="S"+(tempo-2)+"a"+tempo;
+  tempo += 1;
+
+  if(tempo <= 30){
+    tempoLabel = "S"+(tempo-1)+"a"+tempo;
   }else{
-    tempoLabel="S30";
+    tempoLabel = "S30";
   }
 
   fbq('trackCustom',"Tempo_"+tempoLabel);
 
-  if(tempoLabel === "S0a2"){
-    tempoS0a2 = true;
+  if(tempoLabel === "S0a1"){
+    tempoS0a1 = true;
     checkEventoCombinado();
   }
 
-},2000);
+}
+
+/* DISPARA IMEDIATO */
+dispararTempo();
+
+/* LOOP DE 1 EM 1 SEGUNDO */
+setInterval(dispararTempo,1000);
 
 /* EVENTO COMBINADO */
 function checkEventoCombinado(){
 
-  if(clickRight && tempoS0a2 && !eventoDisparado){
-    
+  if(clickRight && tempoS0a1 && !eventoDisparado){
     fbq('trackCustom', 'EVENTO01');
-
     eventoDisparado = true;
   }
 
